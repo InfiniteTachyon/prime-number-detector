@@ -7,7 +7,8 @@
 #include <condition_variable>
 #include <thread>
 #include <atomic>
-
+#include <vector>
+#include <iostream>
 
 std::vector<int64_t>
 detect_primes(const std::vector<int64_t> & nums, int n_threads);
@@ -53,7 +54,6 @@ std::vector<int64_t> results;
 std::vector<int64_t> input_global_vector;
 int64_t inputPointer = -1;
 std::atomic<bool> globalBreak = false;
-int64_t asdfadsf; //delete later
 std::atomic<bool> continueFlag = true;
 
 
@@ -122,8 +122,6 @@ detect_primes(const std::vector<int64_t> & nums, int n_threads)
 {
 
   input_global_vector = nums;
-  //input_global_vector = {1,2,3,107, 103};
-
 
   simple_barrier barrier(n_threads);    //Defining barrier wrapper
   std::vector<std::thread> threads;
@@ -134,4 +132,31 @@ detect_primes(const std::vector<int64_t> & nums, int n_threads)
     t.join();
 
   return results;
+}
+
+
+
+int main(int argc, char** argv) {
+  std::vector<int64_t> nums;
+  int threads = *argv[1] - '0';
+  
+  while (1) {
+    int64_t num;
+    if (!(std::cin >> num)) break;
+    nums.push_back(num);
+  }
+
+  detect_primes(nums, threads);
+
+
+  printf("primeDetector ran using %d threads.\n", threads);
+  if (results.size() == 0) return 0;
+
+  printf("Identified %d primes: \n", (int)results.size());
+  for (int i = 0; i< (int)results.size(); i++) {
+    std::cout<<" "<<results[i];
+  }
+  printf("\n");
+
+  return 0;
 }
